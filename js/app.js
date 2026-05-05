@@ -2,6 +2,7 @@
 const API_URL = 'https://script.google.com/macros/s/AKfycbxMEsirWB11sN-l8VdJK6b9OtyrgmE7oJ91v_ijcPGcIORQLClNIkVWEzDQR6cR77x5/exec'; // Placeholder
 
 let globalData = [];
+let globalHistory = [];
 
 // DOM Elements
 const sidebar = document.getElementById('sidebar');
@@ -13,9 +14,11 @@ const pageTitle = document.getElementById('pageTitle');
 
 const tableAll = document.getElementById('tbodyAll');
 const tableTeam = document.getElementById('tbodyTeam');
+const tableHistory = document.getElementById('tbodyHistory');
 const teamFilter = document.getElementById('teamFilter');
 const searchInputAll = document.getElementById('searchInputAll');
 const searchInputTeam = document.getElementById('searchInputTeam');
+const searchInputHistory = document.getElementById('searchInputHistory');
 
 const formModal = document.getElementById('formModal');
 const btnAddNew = document.getElementById('btnAddNew');
@@ -63,6 +66,7 @@ function initEvents() {
     // Search & Filter
     searchInputAll.addEventListener('input', () => renderTable(globalData, 'all'));
     searchInputTeam.addEventListener('input', () => renderTable(globalData, 'team'));
+    searchInputHistory.addEventListener('input', () => renderHistoryTable(globalHistory));
     teamFilter.addEventListener('change', () => renderTable(globalData, 'team'));
 
     // Modal
@@ -89,10 +93,12 @@ async function fetchData() {
 
         if (result.status === 'success') {
             globalData = result.data;
+            globalHistory = result.history || [];
             updateDashboard();
             populateTeamFilter();
             renderTable(globalData, 'all');
             renderTable(globalData, 'team');
+            renderHistoryTable(globalHistory);
         } else {
             showToast('Lỗi khi tải dữ liệu: ' + result.message, 'error');
         }
@@ -185,11 +191,55 @@ function renderTable(data, type) {
             <td>${row['Tên chủ nhà/ Tên đơn vị quản lý'] || ''}</td>
             <td style="color: var(--danger-color); font-weight: 600;">${no2026}</td>
             <td><span class="badge ${badgeClass}">${tt}</span></td>
+            <td><div style="max-width: 200px; max-height: 80px; overflow-y: auto; font-size: 12px; white-space: pre-wrap; color: #555;">${row['Ghi chú'] || ''}</div></td>
             <td>
                 <button class="btn-icon" onclick="editData('${row['Mã CSHT']}')" title="Sửa"><i class="fa-solid fa-pen"></i></button>
             </td>
         `;
         tbody.appendChild(tr);
+    });
+}
+
+// Render History Table
+function renderHistoryTable(data) {
+    const searchTerm = searchInputHistory.value.toLowerCase();
+    
+    let filteredData = data.filter(row => {
+        const ma = (row['Mã CSHT'] || '').toLowerCase();
+        const ten = (row['Tên CSHT'] || '').toLowerCase();
+        const hanhDong = (row['Hành động'] || '').toLowerCase();
+        return ma.includes(searchTerm) || ten.includes(searchTerm) || hanhDong.includes(searchTerm);
+    });
+
+    tableHistory.innerHTML = '';
+    
+    if (filteredData.length === 0) {
+        tableHistory.innerHTML = `<tr><td colspan="9" style="text-align: center;">Không tìm thấy lịch sử nào</td></tr>`;
+        return;
+    }
+
+    filteredData.forEach((row) => {
+        const tr = document.createElement('tr');
+        
+        // Màu sắc cho Hành động
+        const action = row['Hành động'] || '';
+        let actionBadge = 'default';
+        if(action.includes('Thêm')) actionBadge = 'success';
+        if(action.includes('Cập nhật')) actionBadge = 'warning';
+        if(action.includes('Xóa')) actionBadge = 'danger';
+
+        tr.innerHTML = `
+            <td style="white-space: nowrap; font-size: 13px;">${row['Thời gian'] || row['Thời gian sửa'] || ''}</td>
+            <td>${row['Tổ hạ tầng'] || ''}</td>
+            <td><span class="badge ${actionBadge}">${action}</span></td>
+            <td><strong>${row['Mã CSHT'] || ''}</strong></td>
+            <td>${row['Tên CSHT'] || ''}</td>
+            <td style="color: var(--danger-color);">${row['Công nợ 2026'] || ''}</td>
+            <td>${row['Tình trạng hồ sơ'] || ''}</td>
+            <td>${row['Phân loại'] || ''}</td>
+            <td><div style="max-width: 250px; max-height: 80px; overflow-y: auto; font-size: 12px; white-space: pre-wrap; color: #555;">${row['Ghi chú'] || ''}</div></td>
+        `;
+        tableHistory.appendChild(tr);
     });
 }
 

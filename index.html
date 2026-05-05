@@ -32,6 +32,10 @@
                     <i class="fa-solid fa-users-viewfinder"></i>
                     <span>Theo Tổ hạ tầng</span>
                 </a>
+                <a href="#" class="nav-item" data-page="history">
+                    <i class="fa-solid fa-clock-rotate-left"></i>
+                    <span>Lịch sử cập nhật</span>
+                </a>
             </nav>
         </aside>
 
@@ -101,6 +105,7 @@
                                     <th>Tên chủ nhà</th>
                                     <th>Nợ 2026</th>
                                     <th>Trạng thái</th>
+                                    <th>Ghi chú</th>
                                     <th>Thao tác</th>
                                 </tr>
                             </thead>
@@ -135,10 +140,41 @@
                                     <th>Tên chủ nhà</th>
                                     <th>Nợ 2026</th>
                                     <th>Trạng thái</th>
+                                    <th>Ghi chú</th>
                                     <th>Thao tác</th>
                                 </tr>
                             </thead>
                             <tbody id="tbodyTeam">
+                                <!-- Data will be populated here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- History Page -->
+                <div id="page-history" class="page">
+                    <div class="table-toolbar">
+                        <div class="search-box">
+                            <i class="fa-solid fa-search"></i>
+                            <input type="text" id="searchInputHistory" placeholder="Tìm kiếm trong lịch sử...">
+                        </div>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="data-table" id="tableHistory">
+                            <thead>
+                                <tr>
+                                    <th>Thời gian</th>
+                                    <th>Tổ hạ tầng</th>
+                                    <th>Hành động</th>
+                                    <th>Mã CSHT</th>
+                                    <th>Tên CSHT</th>
+                                    <th>Công nợ 2026</th>
+                                    <th>Tình trạng hồ sơ</th>
+                                    <th>Phân loại</th>
+                                    <th>Ghi chú</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tbodyHistory">
                                 <!-- Data will be populated here -->
                             </tbody>
                         </table>
