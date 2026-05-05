@@ -4,6 +4,12 @@ const API_URL = 'https://script.google.com/macros/s/AKfycbxMEsirWB11sN-l8VdJK6b9
 let globalData = [];
 let globalHistory = [];
 
+// Pagination State
+const ROWS_PER_PAGE = 20;
+let currentPageAll = 1;
+let currentPageTeam = 1;
+let currentPageHistory = 1;
+
 // DOM Elements
 const sidebar = document.getElementById('sidebar');
 const menuToggle = document.getElementById('menuToggle');
@@ -64,10 +70,10 @@ function initEvents() {
     });
 
     // Search & Filter
-    searchInputAll.addEventListener('input', () => renderTable(globalData, 'all'));
-    searchInputTeam.addEventListener('input', () => renderTable(globalData, 'team'));
-    searchInputHistory.addEventListener('input', () => renderHistoryTable(globalHistory));
-    teamFilter.addEventListener('change', () => renderTable(globalData, 'team'));
+    searchInputAll.addEventListener('input', () => { currentPageAll = 1; renderTable(globalData, 'all'); });
+    searchInputTeam.addEventListener('input', () => { currentPageTeam = 1; renderTable(globalData, 'team'); });
+    searchInputHistory.addEventListener('input', () => { currentPageHistory = 1; renderHistoryTable(globalHistory); });
+    teamFilter.addEventListener('change', () => { currentPageTeam = 1; renderTable(globalData, 'team'); });
 
     // Modal
     btnAddNew.addEventListener('click', () => openModal());
@@ -169,12 +175,20 @@ function renderTable(data, type) {
 
     tbody.innerHTML = '';
 
+    // Pagination
+    const currentPage = type === 'all' ? currentPageAll : currentPageTeam;
+    const totalPages = Math.ceil(filteredData.length / ROWS_PER_PAGE);
+    const startIndex = (currentPage - 1) * ROWS_PER_PAGE;
+    const paginatedData = filteredData.slice(startIndex, startIndex + ROWS_PER_PAGE);
+
     if (filteredData.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="8" style="text-align: center;">Không tìm thấy dữ liệu</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="9" style="text-align: center;">Không tìm thấy dữ liệu</td></tr>`;
+        renderPagination(0, type);
         return;
     }
 
-    filteredData.forEach((row, index) => {
+    paginatedData.forEach((row, idx) => {
+        const index = startIndex + idx;
         const tr = document.createElement('tr');
         const tt = row['Tình trạng hồ sơ'] || 'Chưa rõ';
         let badgeClass = 'default';
@@ -198,6 +212,8 @@ function renderTable(data, type) {
         `;
         tbody.appendChild(tr);
     });
+
+    renderPagination(filteredData.length, type);
 }
 
 // Render History Table
@@ -211,14 +227,20 @@ function renderHistoryTable(data) {
         return ma.includes(searchTerm) || ten.includes(searchTerm) || hanhDong.includes(searchTerm);
     });
 
+    // Pagination
+    const totalPages = Math.ceil(filteredData.length / ROWS_PER_PAGE);
+    const startIndex = (currentPageHistory - 1) * ROWS_PER_PAGE;
+    const paginatedData = filteredData.slice(startIndex, startIndex + ROWS_PER_PAGE);
+
     tableHistory.innerHTML = '';
     
     if (filteredData.length === 0) {
         tableHistory.innerHTML = `<tr><td colspan="9" style="text-align: center;">Không tìm thấy lịch sử nào</td></tr>`;
+        renderPagination(0, 'history');
         return;
     }
 
-    filteredData.forEach((row) => {
+    paginatedData.forEach((row) => {
         const tr = document.createElement('tr');
         
         // Màu sắc cho Hành động
@@ -241,6 +263,100 @@ function renderHistoryTable(data) {
         `;
         tableHistory.appendChild(tr);
     });
+    
+    renderPagination(filteredData.length, 'history');
+}
+
+// Render Pagination Controls
+function renderPagination(totalItems, type) {
+    const totalPages = Math.ceil(totalItems / ROWS_PER_PAGE);
+    let paginationContainer;
+    let currentPage;
+
+    if (type === 'all') {
+        paginationContainer = document.getElementById('paginationAll');
+        currentPage = currentPageAll;
+    } else if (type === 'team') {
+        paginationContainer = document.getElementById('paginationTeam');
+        currentPage = currentPageTeam;
+    } else {
+        paginationContainer = document.getElementById('paginationHistory');
+        currentPage = currentPageHistory;
+    }
+
+    if (!paginationContainer) return;
+    paginationContainer.innerHTML = '';
+
+    if (totalPages <= 1) return;
+
+    // Prev Button
+    const prevBtn = document.createElement('button');
+    prevBtn.innerHTML = '<i class="fa-solid fa-chevron-left"></i>';
+    prevBtn.disabled = currentPage === 1;
+    prevBtn.onclick = () => changePage(currentPage - 1, type);
+    paginationContainer.appendChild(prevBtn);
+
+    // Page Numbers
+    let startPage = Math.max(1, currentPage - 2);
+    let endPage = Math.min(totalPages, startPage + 4);
+    
+    if (endPage - startPage < 4) {
+        startPage = Math.max(1, endPage - 4);
+    }
+
+    if (startPage > 1) {
+        const firstBtn = document.createElement('button');
+        firstBtn.innerText = '1';
+        firstBtn.onclick = () => changePage(1, type);
+        paginationContainer.appendChild(firstBtn);
+        if (startPage > 2) {
+            const ellipsis = document.createElement('button');
+            ellipsis.innerText = '...';
+            ellipsis.disabled = true;
+            paginationContainer.appendChild(ellipsis);
+        }
+    }
+
+    for (let i = startPage; i <= endPage; i++) {
+        const pageBtn = document.createElement('button');
+        pageBtn.innerText = i;
+        if (i === currentPage) pageBtn.classList.add('active');
+        pageBtn.onclick = () => changePage(i, type);
+        paginationContainer.appendChild(pageBtn);
+    }
+
+    if (endPage < totalPages) {
+        if (endPage < totalPages - 1) {
+            const ellipsis = document.createElement('button');
+            ellipsis.innerText = '...';
+            ellipsis.disabled = true;
+            paginationContainer.appendChild(ellipsis);
+        }
+        const lastBtn = document.createElement('button');
+        lastBtn.innerText = totalPages;
+        lastBtn.onclick = () => changePage(totalPages, type);
+        paginationContainer.appendChild(lastBtn);
+    }
+
+    // Next Button
+    const nextBtn = document.createElement('button');
+    nextBtn.innerHTML = '<i class="fa-solid fa-chevron-right"></i>';
+    nextBtn.disabled = currentPage === totalPages;
+    nextBtn.onclick = () => changePage(currentPage + 1, type);
+    paginationContainer.appendChild(nextBtn);
+}
+
+function changePage(newPage, type) {
+    if (type === 'all') {
+        currentPageAll = newPage;
+        renderTable(globalData, 'all');
+    } else if (type === 'team') {
+        currentPageTeam = newPage;
+        renderTable(globalData, 'team');
+    } else {
+        currentPageHistory = newPage;
+        renderHistoryTable(globalHistory);
+    }
 }
 
 // Modal Functions
