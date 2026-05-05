@@ -39,6 +39,7 @@ const toast = document.getElementById('toast');
 // Initialize
 document.addEventListener('DOMContentLoaded', () => {
     initEvents();
+    handleRoute(); // Xử lý routing khi vừa load trang
     if (API_URL.includes('AKfy')) { // Only fetch if API is somehow set or use mock
         fetchData();
     } else {
@@ -52,19 +53,12 @@ function initEvents() {
     menuToggle.addEventListener('click', () => sidebar.classList.add('active'));
     closeSidebar.addEventListener('click', () => sidebar.classList.remove('active'));
 
-    // Navigation
+    // Navigation handled by hashchange
+    window.addEventListener('hashchange', handleRoute);
+    
+    // Close sidebar on mobile when a nav item is clicked
     navItems.forEach(item => {
-        item.addEventListener('click', (e) => {
-            e.preventDefault();
-            const targetPage = item.getAttribute('data-page');
-
-            navItems.forEach(n => n.classList.remove('active'));
-            item.classList.add('active');
-
-            pages.forEach(p => p.classList.remove('active'));
-            document.getElementById(`page-${targetPage}`).classList.add('active');
-
-            pageTitle.innerText = item.innerText.trim();
+        item.addEventListener('click', () => {
             if (window.innerWidth <= 992) sidebar.classList.remove('active');
         });
     });
@@ -88,6 +82,30 @@ function initEvents() {
         e.preventDefault();
         saveData();
     });
+}
+
+// Router Logic
+function handleRoute() {
+    let hash = window.location.hash.replace('#/', '') || 'dashboard';
+    
+    // Nếu hash không tồn tại trong danh sách page hợp lệ, đưa về dashboard
+    const validPages = ['dashboard', 'list-all', 'list-team', 'history'];
+    if (!validPages.includes(hash)) {
+        hash = 'dashboard';
+        window.location.hash = '#/dashboard';
+        return;
+    }
+
+    navItems.forEach(n => n.classList.remove('active'));
+    const activeNavItem = document.querySelector(`[data-page="${hash}"]`);
+    if (activeNavItem) {
+        activeNavItem.classList.add('active');
+        pageTitle.innerText = activeNavItem.innerText.trim();
+    }
+
+    pages.forEach(p => p.classList.remove('active'));
+    const activePage = document.getElementById(`page-${hash}`);
+    if (activePage) activePage.classList.add('active');
 }
 
 // Fetch Data
