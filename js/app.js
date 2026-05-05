@@ -402,19 +402,48 @@ function openModal(id = null) {
         modalTitle.innerText = 'Cập nhật Cơ sở hạ tầng';
         const item = globalData.find(x => x['Mã CSHT'] == id);
         if (item) {
+            document.getElementById('field_SoTT').value = item['Số TT'] || '';
             document.getElementById('field_MaCSHT').value = item['Mã CSHT'] || '';
-            document.getElementById('field_MaCSHT').readOnly = true; // Không cho sửa ID
-
             document.getElementById('field_TenCSHT').value = item['Tên CSHT'] || '';
-            document.getElementById('field_ToHaTang').value = item['Tổ hạ tầng'] || '';
             document.getElementById('field_Site').value = item['Site'] || '';
-            document.getElementById('field_TenChuNha').value = item['Tên chủ nhà/ Tên đơn vị quản lý'] || '';
-            document.getElementById('field_DiaChi').value = item['Địa chỉ'] || '';
-            document.getElementById('field_SoHopDong').value = item['Số hợp đồng'] || '';
-            document.getElementById('field_ConPhaiThanhToan2026').value = item['Còn phải thanh toán 2026'] || item['Tháng CP 2026'] || '';
+            document.getElementById('field_ToHaTang').value = item['Tổ hạ tầng'] || '';
             document.getElementById('field_PhanLoai').value = item['Phân loại'] || '';
+            document.getElementById('field_TenChuNha').value = item['Tên chủ nhà/ Tên đơn vị quản lý'] || '';
+            document.getElementById('field_TenChuNhaMoi').value = item['Tên chủ nhà/đơn vị mới'] || '';
+            document.getElementById('field_SoDienThoai').value = item['Số điện thoại liên hệ'] || '';
+            document.getElementById('field_DiaChi').value = item['Địa chỉ'] || '';
+            document.getElementById('field_DVQLTruocBanGiao').value = item['Đơn vị quản lý trước bàn giao'] || '';
+            document.getElementById('field_SoHopDong').value = item['Số hợp đồng'] || '';
+            document.getElementById('field_NgayHieuLuc').value = item['Ngày hiệu lực'] || '';
+            document.getElementById('field_ThoiHanThue').value = item['Thời hạn thuê (năm)'] || '';
+            document.getElementById('field_NgayDaoHan').value = item['Ngày đáo hạn HĐ'] || '';
             document.getElementById('field_TinhTrangHoSo').value = item['Tình trạng hồ sơ'] || '';
             document.getElementById('field_BanGiaoHopDongGoc').value = item['Bàn giao hợp đồng gốc'] || '';
+            document.getElementById('field_FileHDCu').value = item['File hợp đồng cũ'] || '';
+            document.getElementById('field_FileHDMoi').value = item['File hợp đồng mới'] || '';
+            document.getElementById('field_VuongMac').value = item['Vướng mắc khi ký hợp đồng'] || '';
+            document.getElementById('field_DonGia2025').value = item['Đơn giá 2025 (chưa VAT)'] || '';
+            document.getElementById('field_TongTien2025').value = item['Tổng tiền năm 2025'] || '';
+            document.getElementById('field_Tong2025DaTra').value = item['Tổng 2025 đã trả'] || '';
+            document.getElementById('field_TongPhaiTra2025').value = item['Tổng phải trả còn lại 2025 (nhận bàn giao về)'] || '';
+            document.getElementById('field_CongNo2025XinYKien').value = item['Công nợ 2025 còn phải trả đang xin ý kiến VTT'] || '';
+            document.getElementById('field_CanNo2025').value = item['Cấn nợ CN 2025 tới 15/4/2026'] || '';
+            document.getElementById('field_TangGia').value = item['Tăng giá'] || '';
+            document.getElementById('field_GiaMoiDeNghiTang').value = item['Giá mới đề nghị tăng'] || '';
+            document.getElementById('field_DonGia2026').value = item['Đơn giá 2026 (chưa VAT)'] || '';
+            document.getElementById('field_ThangCP2026').value = item['Tháng CP 2026'] || '';
+            document.getElementById('field_DaThanhToan2026_T3').value = item['đã thanh toán 2026 đến 31/3/2026'] || '';
+            document.getElementById('field_DaThanhToan_1_10').value = item['đã thanh toán từ 1/10 đến nay'] || '';
+            document.getElementById('field_ConPhaiThanhToan2026').value = item['Còn phải thanh toán 2026'] || '';
+            document.getElementById('field_ThanhToanT4').value = item['Thanh toán tháng 4.2026'] || '';
+            document.getElementById('field_ThanhToanT5').value = item['Thanh toán tháng 5.2026'] || '';
+            document.getElementById('field_ThanhToanT6').value = item['Thanh toán tháng 6.2026'] || '';
+            document.getElementById('field_ThanhToanT7').value = item['Thanh toán tháng 7.2026'] || '';
+            document.getElementById('field_ThanhToanT8').value = item['Thanh toán tháng 8.2026'] || '';
+            document.getElementById('field_ThanhToanT9').value = item['Thanh toán tháng 9.2026'] || '';
+            document.getElementById('field_ThanhToanT10').value = item['Thanh toán tháng 10.2026'] || '';
+            document.getElementById('field_ThanhToanT11').value = item['Thanh toán tháng 11.2026'] || '';
+            document.getElementById('field_ThanhToanT12').value = item['Thanh toán tháng 12.2026'] || '';
 
             // Xử lý ghi chú cũ
             const oldNote = item['Ghi chú'] || '';
@@ -448,17 +477,48 @@ async function saveData() {
         action: isUpdate ? 'update' : 'create',
         id: isUpdate ? maCSHT : null,
         data: {
+            'Số TT': document.getElementById('field_SoTT').value,
             'Mã CSHT': maCSHT,
             'Tên CSHT': document.getElementById('field_TenCSHT').value,
-            'Tổ hạ tầng': document.getElementById('field_ToHaTang').value,
             'Site': document.getElementById('field_Site').value,
-            'Tên chủ nhà/ Tên đơn vị quản lý': document.getElementById('field_TenChuNha').value,
-            'Địa chỉ': document.getElementById('field_DiaChi').value,
-            'Số hợp đồng': document.getElementById('field_SoHopDong').value,
-            'Còn phải thanh toán 2026': document.getElementById('field_ConPhaiThanhToan2026').value,
+            'Tổ hạ tầng': document.getElementById('field_ToHaTang').value,
             'Phân loại': document.getElementById('field_PhanLoai').value,
+            'Tên chủ nhà/ Tên đơn vị quản lý': document.getElementById('field_TenChuNha').value,
+            'Tên chủ nhà/đơn vị mới': document.getElementById('field_TenChuNhaMoi').value,
+            'Số điện thoại liên hệ': document.getElementById('field_SoDienThoai').value,
+            'Địa chỉ': document.getElementById('field_DiaChi').value,
+            'Đơn vị quản lý trước bàn giao': document.getElementById('field_DVQLTruocBanGiao').value,
+            'Số hợp đồng': document.getElementById('field_SoHopDong').value,
+            'Ngày hiệu lực': document.getElementById('field_NgayHieuLuc').value,
+            'Thời hạn thuê (năm)': document.getElementById('field_ThoiHanThue').value,
+            'Ngày đáo hạn HĐ': document.getElementById('field_NgayDaoHan').value,
             'Tình trạng hồ sơ': document.getElementById('field_TinhTrangHoSo').value,
             'Bàn giao hợp đồng gốc': document.getElementById('field_BanGiaoHopDongGoc').value,
+            'File hợp đồng cũ': document.getElementById('field_FileHDCu').value,
+            'File hợp đồng mới': document.getElementById('field_FileHDMoi').value,
+            'Vướng mắc khi ký hợp đồng': document.getElementById('field_VuongMac').value,
+            'Đơn giá 2025 (chưa VAT)': document.getElementById('field_DonGia2025').value,
+            'Tổng tiền năm 2025': document.getElementById('field_TongTien2025').value,
+            'Tổng 2025 đã trả': document.getElementById('field_Tong2025DaTra').value,
+            'Tổng phải trả còn lại 2025 (nhận bàn giao về)': document.getElementById('field_TongPhaiTra2025').value,
+            'Công nợ 2025 còn phải trả đang xin ý kiến VTT': document.getElementById('field_CongNo2025XinYKien').value,
+            'Cấn nợ CN 2025 tới 15/4/2026': document.getElementById('field_CanNo2025').value,
+            'Tăng giá': document.getElementById('field_TangGia').value,
+            'Giá mới đề nghị tăng': document.getElementById('field_GiaMoiDeNghiTang').value,
+            'Đơn giá 2026 (chưa VAT)': document.getElementById('field_DonGia2026').value,
+            'Tháng CP 2026': document.getElementById('field_ThangCP2026').value,
+            'đã thanh toán 2026 đến 31/3/2026': document.getElementById('field_DaThanhToan2026_T3').value,
+            'đã thanh toán từ 1/10 đến nay': document.getElementById('field_DaThanhToan_1_10').value,
+            'Còn phải thanh toán 2026': document.getElementById('field_ConPhaiThanhToan2026').value,
+            'Thanh toán tháng 4.2026': document.getElementById('field_ThanhToanT4').value,
+            'Thanh toán tháng 5.2026': document.getElementById('field_ThanhToanT5').value,
+            'Thanh toán tháng 6.2026': document.getElementById('field_ThanhToanT6').value,
+            'Thanh toán tháng 7.2026': document.getElementById('field_ThanhToanT7').value,
+            'Thanh toán tháng 8.2026': document.getElementById('field_ThanhToanT8').value,
+            'Thanh toán tháng 9.2026': document.getElementById('field_ThanhToanT9').value,
+            'Thanh toán tháng 10.2026': document.getElementById('field_ThanhToanT10').value,
+            'Thanh toán tháng 11.2026': document.getElementById('field_ThanhToanT11').value,
+            'Thanh toán tháng 12.2026': document.getElementById('field_ThanhToanT12').value,
             'Ghi chú': document.getElementById('field_GhiChu').value
         }
     };
