@@ -445,9 +445,16 @@ function openModal(id = null) {
             document.getElementById('field_ThanhToanT11').value = item['Thanh toán tháng 11.2026'] || '';
             document.getElementById('field_ThanhToanT12').value = item['Thanh toán tháng 12.2026'] || '';
 
-            // Đưa thẳng Ghi chú cũ vào textarea để người dùng dễ dàng chỉnh sửa hoặc nối tiếp
-            document.getElementById('field_GhiChu').value = item['Ghi chú'] || '';
-            document.getElementById('oldNoteContainer').style.display = 'none';
+            // Xử lý ghi chú cũ, hiển thị riêng phần dữ liệu cũ và để trống input cho ghi chú mới
+            const oldNote = item['Ghi chú'] || '';
+            if (oldNote) {
+                const oldNoteEl = document.getElementById('oldNoteContainer');
+                oldNoteEl.innerText = 'Ghi chú cũ:\n' + oldNote;
+                oldNoteEl.style.display = 'block';
+            } else {
+                document.getElementById('oldNoteContainer').style.display = 'none';
+            }
+            document.getElementById('field_GhiChu').value = '';
         }
     } else {
         modalTitle.innerText = 'Thêm mới Cơ sở hạ tầng';
