@@ -35,6 +35,17 @@ const dataForm = document.getElementById('dataForm');
 const modalTitle = document.getElementById('modalTitle');
 const loadingOverlay = document.getElementById('loadingOverlay');
 const toast = document.getElementById('toast');
+const btnRefresh = document.getElementById('btnRefresh');
+
+// Helper: Format Currency
+function formatCurrency(val) {
+    if (val === undefined || val === null || val === '') return '';
+    let numStr = String(val).replace(/[^\d-]/g, '');
+    if (!numStr) return val;
+    let num = parseInt(numStr, 10);
+    if (isNaN(num)) return val;
+    return new Intl.NumberFormat('vi-VN').format(num);
+}
 
 // Initialize
 document.addEventListener('DOMContentLoaded', () => {
@@ -68,6 +79,11 @@ function initEvents() {
     searchInputTeam.addEventListener('input', () => { currentPageTeam = 1; renderTable(globalData, 'team'); });
     searchInputHistory.addEventListener('input', () => { currentPageHistory = 1; renderHistoryTable(globalHistory); });
     teamFilter.addEventListener('change', () => { currentPageTeam = 1; renderTable(globalData, 'team'); });
+
+    // Refresh Button
+    if (btnRefresh) {
+        btnRefresh.addEventListener('click', () => fetchData());
+    }
 
     // Modal
     btnAddNew.addEventListener('click', () => openModal());
@@ -221,7 +237,7 @@ function renderTable(data, type) {
             <td>${row['Tên CSHT'] || ''}</td>
             ${type === 'all' ? `<td>${row['Tổ hạ tầng'] || ''}</td>` : ''}
             <td>${row['Tên chủ nhà/ Tên đơn vị quản lý'] || ''}</td>
-            <td style="color: var(--danger-color); font-weight: 600;">${no2026}</td>
+            <td style="color: var(--danger-color); font-weight: 600;">${formatCurrency(no2026)}</td>
             <td><span class="badge ${badgeClass}">${tt}</span></td>
             <td><div style="max-width: 200px; max-height: 80px; overflow-y: auto; font-size: 12px; white-space: pre-wrap; color: #555;">${row['Ghi chú'] || ''}</div></td>
             <td>
@@ -274,7 +290,7 @@ function renderHistoryTable(data) {
             <td><span class="badge ${actionBadge}">${action}</span></td>
             <td><strong>${row['Mã CSHT'] || ''}</strong></td>
             <td>${row['Tên CSHT'] || ''}</td>
-            <td style="color: var(--danger-color);">${row['Công nợ 2026'] || ''}</td>
+            <td style="color: var(--danger-color);">${formatCurrency(row['Công nợ 2026'])}</td>
             <td>${row['Tình trạng hồ sơ'] || ''}</td>
             <td>${row['Phân loại'] || ''}</td>
             <td><div style="max-width: 250px; max-height: 80px; overflow-y: auto; font-size: 12px; white-space: pre-wrap; color: #555;">${row['Ghi chú'] || ''}</div></td>
