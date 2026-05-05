@@ -148,7 +148,7 @@ function updateDashboard() {
         }
 
         // HĐ Gốc
-        const hdGoc = row['Bàn giao hợp đồng gốc'] || '';
+        const hdGoc = String(row['Bàn giao hợp đồng gốc'] || '');
         if (hdGoc.toLowerCase().includes('chưa')) {
             missingContracts++;
         }
@@ -178,9 +178,9 @@ function renderTable(data, type) {
     const searchTerm = searchInput.value.toLowerCase();
 
     let filteredData = data.filter(row => {
-        const ma = (row['Mã CSHT'] || '').toLowerCase();
-        const ten = (row['Tên CSHT'] || '').toLowerCase();
-        const dc = (row['Địa chỉ'] || '').toLowerCase();
+        const ma = String(row['Mã CSHT'] || '').toLowerCase();
+        const ten = String(row['Tên CSHT'] || '').toLowerCase();
+        const dc = String(row['Địa chỉ'] || '').toLowerCase();
         return ma.includes(searchTerm) || ten.includes(searchTerm) || dc.includes(searchTerm);
     });
 
@@ -208,7 +208,7 @@ function renderTable(data, type) {
     paginatedData.forEach((row, idx) => {
         const index = startIndex + idx;
         const tr = document.createElement('tr');
-        const tt = row['Tình trạng hồ sơ'] || 'Chưa rõ';
+        const tt = String(row['Tình trạng hồ sơ'] || 'Chưa rõ');
         let badgeClass = 'default';
         if (tt.toLowerCase().includes('đã thanh toán') || tt.toLowerCase().includes('hoàn thành')) badgeClass = 'success';
         if (tt.toLowerCase().includes('chưa') || tt.toLowerCase().includes('nợ')) badgeClass = 'danger';
@@ -239,9 +239,9 @@ function renderHistoryTable(data) {
     const searchTerm = searchInputHistory.value.toLowerCase();
     
     let filteredData = data.filter(row => {
-        const ma = (row['Mã CSHT'] || '').toLowerCase();
-        const ten = (row['Tên CSHT'] || '').toLowerCase();
-        const hanhDong = (row['Hành động'] || '').toLowerCase();
+        const ma = String(row['Mã CSHT'] || '').toLowerCase();
+        const ten = String(row['Tên CSHT'] || '').toLowerCase();
+        const hanhDong = String(row['Hành động'] || '').toLowerCase();
         return ma.includes(searchTerm) || ten.includes(searchTerm) || hanhDong.includes(searchTerm);
     });
 
@@ -262,7 +262,7 @@ function renderHistoryTable(data) {
         const tr = document.createElement('tr');
         
         // Màu sắc cho Hành động
-        const action = row['Hành động'] || '';
+        const action = String(row['Hành động'] || '');
         let actionBadge = 'default';
         if(action.includes('Thêm')) actionBadge = 'success';
         if(action.includes('Cập nhật')) actionBadge = 'warning';

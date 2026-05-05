@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="vi">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,6 +9,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="./css/style.css?v=4">
 </head>
+
 <body>
     <div class="app-container">
         <!-- Sidebar -->
@@ -58,7 +60,7 @@
 
             <!-- Pages -->
             <div class="page-container">
-                
+
                 <!-- Dashboard Page -->
                 <div id="page-dashboard" class="page active">
                     <div class="stats-grid">
@@ -198,7 +200,7 @@
             <div class="modal-body">
                 <form id="dataForm">
                     <input type="hidden" id="field_SoTT">
-                    
+
                     <div class="form-grid">
                         <div class="form-group">
                             <label>Mã CSHT</label>
@@ -246,8 +248,11 @@
                         </div>
                         <div class="form-group full-width">
                             <label>Ghi chú (Nhập vào đây để cập nhật ghi chú mới)</label>
-                            <textarea id="field_GhiChu" rows="3" placeholder="Ghi chú mới sẽ được tự động thêm ngày giờ và nối tiếp vào ghi chú cũ..."></textarea>
-                            <div id="oldNoteContainer" style="display: none; margin-top: 8px; font-size: 13px; color: #666; background: #f5f5f5; padding: 8px; border-radius: 4px; white-space: pre-wrap;"></div>
+                            <textarea id="field_GhiChu" rows="3"
+                                placeholder="Ghi chú mới sẽ được tự động thêm ngày giờ và nối tiếp vào ghi chú cũ..."></textarea>
+                            <div id="oldNoteContainer"
+                                style="display: none; margin-top: 8px; font-size: 13px; color: #666; background: #f5f5f5; padding: 8px; border-radius: 4px; white-space: pre-wrap;">
+                            </div>
                         </div>
                     </div>
                 </form>
@@ -270,4 +275,5 @@
 
     <script src="./js/app.js?v=4"></script>
 </body>
+
 </html>
