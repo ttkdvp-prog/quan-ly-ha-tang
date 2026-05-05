@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quản lý Hạ tầng</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="./css/style.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <i class="fa-solid fa-server"></i>
+                    <span>QL Hạ tầng</span>
+                </div>
+                <button class="close-sidebar" id="closeSidebar"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <nav class="sidebar-nav">
+                <a href="#" class="nav-item active" data-page="dashboard">
+                    <i class="fa-solid fa-chart-pie"></i>
+                    <span>Tổng quan</span>
+                </a>
+                <a href="#" class="nav-item" data-page="list-all">
+                    <i class="fa-solid fa-table-list"></i>
+                    <span>Danh sách CSHT</span>
+                </a>
+                <a href="#" class="nav-item" data-page="list-team">
+                    <i class="fa-solid fa-users-viewfinder"></i>
+                    <span>Theo Tổ hạ tầng</span>
+                </a>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Header -->
+            <header class="header">
+                <button class="menu-toggle" id="menuToggle">
+                    <i class="fa-solid fa-bars"></i>
+                </button>
+                <div class="header-title">
+                    <h2 id="pageTitle">Tổng quan</h2>
+                </div>
+                <div class="header-actions">
+                    <button class="btn btn-primary" id="btnAddNew">
+                        <i class="fa-solid fa-plus"></i> Thêm mới
+                    </button>
+                </div>
+            </header>
+
+            <!-- Pages -->
+            <div class="page-container">
+                
+                <!-- Dashboard Page -->
+                <div id="page-dashboard" class="page active">
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-icon bg-blue"><i class="fa-solid fa-building"></i></div>
+                            <div class="stat-info">
+                                <p class="stat-label">Tổng số dự án</p>
+                                <h3 class="stat-value" id="statTotalProjects">0</h3>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon bg-red"><i class="fa-solid fa-money-bill-wave"></i></div>
+                            <div class="stat-info">
+                                <p class="stat-label">Tổng nợ 2026</p>
+                                <h3 class="stat-value" id="statTotalDebt">0 đ</h3>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon bg-orange"><i class="fa-solid fa-file-contract"></i></div>
+                            <div class="stat-info">
+                                <p class="stat-label">Chưa nộp HĐ gốc</p>
+                                <h3 class="stat-value" id="statMissingContracts">0</h3>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- List All Page -->
+                <div id="page-list-all" class="page">
+                    <div class="table-toolbar">
+                        <div class="search-box">
+                            <i class="fa-solid fa-search"></i>
+                            <input type="text" id="searchInputAll" placeholder="Tìm kiếm theo mã, tên, địa chỉ...">
+                        </div>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="data-table" id="tableAll">
+                            <thead>
+                                <tr>
+                                    <th>STT</th>
+                                    <th>Mã CSHT</th>
+                                    <th>Tên CSHT</th>
+                                    <th>Tổ hạ tầng</th>
+                                    <th>Tên chủ nhà</th>
+                                    <th>Nợ 2026</th>
+                                    <th>Trạng thái</th>
+                                    <th>Thao tác</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tbodyAll">
+                                <!-- Data will be populated here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- List By Team Page -->
+                <div id="page-list-team" class="page">
+                    <div class="table-toolbar">
+                        <div class="filter-box">
+                            <select id="teamFilter">
+                                <option value="">-- Chọn tổ hạ tầng --</option>
+                                <!-- Teams will be populated here -->
+                            </select>
+                        </div>
+                        <div class="search-box">
+                            <i class="fa-solid fa-search"></i>
+                            <input type="text" id="searchInputTeam" placeholder="Tìm kiếm trong tổ...">
+                        </div>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="data-table" id="tableTeam">
+                            <thead>
+                                <tr>
+                                    <th>STT</th>
+                                    <th>Mã CSHT</th>
+                                    <th>Tên CSHT</th>
+                                    <th>Tên chủ nhà</th>
+                                    <th>Nợ 2026</th>
+                                    <th>Trạng thái</th>
+                                    <th>Thao tác</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tbodyTeam">
+                                <!-- Data will be populated here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+            </div>
+        </main>
+    </div>
+
+    <!-- Modal Form -->
+    <div class="modal-overlay" id="formModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="modalTitle">Thêm mới Cơ sở hạ tầng</h3>
+                <button class="close-modal" id="closeModal"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="modal-body">
+                <form id="dataForm">
+                    <input type="hidden" id="field_SoTT">
+                    
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label>Mã CSHT</label>
+                            <input type="text" id="field_MaCSHT" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Tên CSHT</label>
+                            <input type="text" id="field_TenCSHT" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Tổ hạ tầng</label>
+                            <input type="text" id="field_ToHaTang">
+                        </div>
+                        <div class="form-group">
+                            <label>Site</label>
+                            <input type="text" id="field_Site">
+                        </div>
+                        <div class="form-group">
+                            <label>Tên chủ nhà / ĐV quản lý</label>
+                            <input type="text" id="field_TenChuNha">
+                        </div>
+                        <div class="form-group">
+                            <label>Địa chỉ</label>
+                            <input type="text" id="field_DiaChi">
+                        </div>
+                        <div class="form-group">
+                            <label>Số hợp đồng</label>
+                            <input type="text" id="field_SoHopDong">
+                        </div>
+                        <div class="form-group">
+                            <label>Còn phải thanh toán 2026</label>
+                            <input type="text" id="field_ConPhaiThanhToan2026">
+                        </div>
+                        <div class="form-group">
+                            <label>Phân loại</label>
+                            <input type="text" id="field_PhanLoai">
+                        </div>
+                        <div class="form-group">
+                            <label>Tình trạng hồ sơ</label>
+                            <input type="text" id="field_TinhTrangHoSo">
+                        </div>
+                        <div class="form-group">
+                            <label>Bàn giao hợp đồng gốc</label>
+                            <input type="text" id="field_BanGiaoHopDongGoc">
+                        </div>
+                        <div class="form-group full-width">
+                            <label>Ghi chú (Nhập vào đây để cập nhật ghi chú mới)</label>
+                            <textarea id="field_GhiChu" rows="3" placeholder="Ghi chú mới sẽ được tự động thêm ngày giờ và nối tiếp vào ghi chú cũ..."></textarea>
+                            <div id="oldNoteContainer" style="display: none; margin-top: 8px; font-size: 13px; color: #666; background: #f5f5f5; padding: 8px; border-radius: 4px; white-space: pre-wrap;"></div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" id="btnCancel">Hủy</button>
+                <button class="btn btn-primary" id="btnSave">Lưu dữ liệu</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="spinner"></div>
+        <p>Đang xử lý dữ liệu...</p>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="toast"></div>
+
+    <script src="./js/app.js"></script>
+</body>
+</html>
